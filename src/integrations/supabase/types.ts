@@ -14,7 +14,351 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      batch_food_expenses: {
+        Row: {
+          amount: number
+          batch_id: string
+          created_at: string
+          description: string | null
+          expense_date: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          batch_id: string
+          created_at?: string
+          description?: string | null
+          expense_date: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          batch_id?: string
+          created_at?: string
+          description?: string | null
+          expense_date?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "batch_food_expenses_batch_id_fkey"
+            columns: ["batch_id"]
+            isOneToOne: false
+            referencedRelation: "poultry_batches"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      batch_losses: {
+        Row: {
+          batch_id: string
+          cause: string | null
+          created_at: string
+          id: string
+          loss_date: string
+          quantity_lost: number
+          user_id: string
+        }
+        Insert: {
+          batch_id: string
+          cause?: string | null
+          created_at?: string
+          id?: string
+          loss_date: string
+          quantity_lost: number
+          user_id: string
+        }
+        Update: {
+          batch_id?: string
+          cause?: string | null
+          created_at?: string
+          id?: string
+          loss_date?: string
+          quantity_lost?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "batch_losses_batch_id_fkey"
+            columns: ["batch_id"]
+            isOneToOne: false
+            referencedRelation: "poultry_batches"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      batch_other_expenses: {
+        Row: {
+          amount: number
+          batch_id: string
+          created_at: string
+          description: string
+          expense_date: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          batch_id: string
+          created_at?: string
+          description: string
+          expense_date: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          batch_id?: string
+          created_at?: string
+          description?: string
+          expense_date?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "batch_other_expenses_batch_id_fkey"
+            columns: ["batch_id"]
+            isOneToOne: false
+            referencedRelation: "poultry_batches"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      batch_sales: {
+        Row: {
+          amount: number
+          batch_id: string
+          created_at: string
+          description: string | null
+          id: string
+          quantity_sold: number
+          sale_date: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          batch_id: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          quantity_sold: number
+          sale_date: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          batch_id?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          quantity_sold?: number
+          sale_date?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "batch_sales_batch_id_fkey"
+            columns: ["batch_id"]
+            isOneToOne: false
+            referencedRelation: "poultry_batches"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      livestock_expenses: {
+        Row: {
+          amount: number
+          category: string
+          created_at: string
+          description: string | null
+          expense_date: string
+          id: string
+          livestock_id: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          category: string
+          created_at?: string
+          description?: string | null
+          expense_date: string
+          id?: string
+          livestock_id: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          category?: string
+          created_at?: string
+          description?: string | null
+          expense_date?: string
+          id?: string
+          livestock_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "livestock_expenses_livestock_id_fkey"
+            columns: ["livestock_id"]
+            isOneToOne: false
+            referencedRelation: "livestock_records"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      livestock_records: {
+        Row: {
+          animal_type: string
+          created_at: string
+          id: string
+          name: string | null
+          notes: string | null
+          purchase_cost: number
+          purchase_date: string
+          quantity: number
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          animal_type: string
+          created_at?: string
+          id?: string
+          name?: string | null
+          notes?: string | null
+          purchase_cost: number
+          purchase_date: string
+          quantity?: number
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          animal_type?: string
+          created_at?: string
+          id?: string
+          name?: string | null
+          notes?: string | null
+          purchase_cost?: number
+          purchase_date?: string
+          quantity?: number
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      livestock_sales: {
+        Row: {
+          amount: number
+          created_at: string
+          description: string | null
+          id: string
+          livestock_id: string
+          quantity_sold: number
+          sale_date: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          description?: string | null
+          id?: string
+          livestock_id: string
+          quantity_sold: number
+          sale_date: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          description?: string | null
+          id?: string
+          livestock_id?: string
+          quantity_sold?: number
+          sale_date?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "livestock_sales_livestock_id_fkey"
+            columns: ["livestock_id"]
+            isOneToOne: false
+            referencedRelation: "livestock_records"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      poultry_batches: {
+        Row: {
+          batch_name: string
+          created_at: string
+          id: string
+          notes: string | null
+          purchase_cost: number
+          purchase_date: string
+          quantity_bought: number
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          batch_name: string
+          created_at?: string
+          id?: string
+          notes?: string | null
+          purchase_cost: number
+          purchase_date: string
+          quantity_bought: number
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          batch_name?: string
+          created_at?: string
+          id?: string
+          notes?: string | null
+          purchase_cost?: number
+          purchase_date?: string
+          quantity_bought?: number
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          farm_name: string | null
+          full_name: string | null
+          id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          farm_name?: string | null
+          full_name?: string | null
+          id?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          farm_name?: string | null
+          full_name?: string | null
+          id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
