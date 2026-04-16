@@ -14,6 +14,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
 import { ArrowLeft, Plus, DollarSign, TrendingDown, Skull, Package, Trash2 } from 'lucide-react';
 import { format } from 'date-fns';
+import { formatKes } from '@/lib/currency';
 
 const BatchDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -92,14 +93,14 @@ const BatchDetail = () => {
           <ArrowLeft className="h-4 w-4" /> Back to Batches
         </button>
 
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-6">
           <div>
-            <h1 className="text-2xl font-bold text-foreground">{batch.batch_name}</h1>
+            <h1 className="text-xl sm:text-2xl font-bold text-foreground break-words">{batch.batch_name}</h1>
             <p className="text-sm text-muted-foreground">
               Started {format(new Date(batch.purchase_date), 'MMM dd, yyyy')} · {batch.quantity_bought} birds purchased
             </p>
           </div>
-          <span className={`rounded-full px-3 py-1 text-sm font-medium ${
+          <span className={`self-start rounded-full px-3 py-1 text-sm font-medium ${
             batch.status === 'active' ? 'bg-accent text-accent-foreground' : 'bg-muted text-muted-foreground'
           }`}>
             {batch.status}
@@ -107,31 +108,31 @@ const BatchDetail = () => {
         </div>
 
         {/* Financial Summary */}
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 mb-8">
+        <div className="grid gap-4 grid-cols-2 lg:grid-cols-4 mb-8">
           <Card>
             <CardContent className="pt-6">
               <p className="text-sm text-muted-foreground">Total Revenue</p>
-              <p className="text-2xl font-bold text-foreground">{totalSales.toLocaleString()}</p>
+              <p className="text-lg sm:text-2xl font-bold text-foreground break-words">{formatKes(totalSales)}</p>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="pt-6">
               <p className="text-sm text-muted-foreground">Total Expenses</p>
-              <p className="text-2xl font-bold text-foreground">{totalExpenses.toLocaleString()}</p>
+              <p className="text-lg sm:text-2xl font-bold text-foreground break-words">{formatKes(totalExpenses)}</p>
             </CardContent>
           </Card>
-          <Card>
+          <Card className={netProfit >= 0 ? 'border-success/40' : 'border-destructive/40'}>
             <CardContent className="pt-6">
               <p className="text-sm text-muted-foreground">Net Profit/Loss</p>
-              <p className={`text-2xl font-bold ${netProfit >= 0 ? 'text-success' : 'text-destructive'}`}>
-                {netProfit >= 0 ? '+' : ''}{netProfit.toLocaleString()}
+              <p className={`text-lg sm:text-2xl font-bold break-words ${netProfit >= 0 ? 'text-success' : 'text-destructive'}`}>
+                {netProfit >= 0 ? '+' : '-'}{formatKes(Math.abs(netProfit))}
               </p>
             </CardContent>
           </Card>
           <Card>
             <CardContent className="pt-6">
               <p className="text-sm text-muted-foreground">Remaining Stock</p>
-              <p className="text-2xl font-bold text-foreground">{remainingStock}</p>
+              <p className="text-lg sm:text-2xl font-bold text-foreground">{remainingStock}</p>
               <p className="text-xs text-muted-foreground">{totalLosses} lost · {totalSold} sold</p>
             </CardContent>
           </Card>
@@ -139,11 +140,11 @@ const BatchDetail = () => {
 
         {/* Tabs */}
         <Tabs defaultValue="food" className="w-full">
-          <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="food">Food Costs</TabsTrigger>
-            <TabsTrigger value="sales">Sales</TabsTrigger>
-            <TabsTrigger value="losses">Losses</TabsTrigger>
-            <TabsTrigger value="other">Other Expenses</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-4 h-auto">
+            <TabsTrigger value="food" className="text-xs sm:text-sm py-2">Food</TabsTrigger>
+            <TabsTrigger value="sales" className="text-xs sm:text-sm py-2">Sales</TabsTrigger>
+            <TabsTrigger value="losses" className="text-xs sm:text-sm py-2">Losses</TabsTrigger>
+            <TabsTrigger value="other" className="text-xs sm:text-sm py-2">Other</TabsTrigger>
           </TabsList>
 
           <TabsContent value="food">
@@ -313,10 +314,10 @@ const EntrySection = ({ title, icon, entries, batchId, userId, type }: EntrySect
             {entries.map((entry) => {
               const entryDate = entry.expense_date || entry.sale_date || entry.loss_date;
               return (
-                <div key={entry.id} className="flex items-center justify-between rounded-lg border p-3">
-                  <div>
-                    <p className="text-sm font-medium">
-                      {type === 'losses' ? `${entry.quantity_lost} birds` : Number(entry.amount).toLocaleString()}
+                <div key={entry.id} className="flex items-center justify-between gap-2 rounded-lg border p-3">
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm font-medium break-words">
+                      {type === 'losses' ? `${entry.quantity_lost} birds` : formatKes(entry.amount)}
                       {type === 'sales' ? ` (${entry.quantity_sold} sold)` : ''}
                     </p>
                     <p className="text-xs text-muted-foreground">
