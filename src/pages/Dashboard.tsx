@@ -42,10 +42,10 @@ const Dashboard = () => {
   return (
     <AppLayout>
       <div className="animate-fade-in">
-        <h1 className="text-2xl font-bold text-foreground">Dashboard</h1>
-        <p className="mt-1 text-muted-foreground">Welcome back to your farm overview</p>
+        <h1 className="text-xl sm:text-2xl font-bold text-foreground">Dashboard</h1>
+        <p className="mt-1 text-sm text-muted-foreground">Welcome back to your farm overview</p>
 
-        <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-6 grid gap-4 grid-cols-2 lg:grid-cols-4">
           <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => navigate('/poultry')}>
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground">Active Batches</CardTitle>

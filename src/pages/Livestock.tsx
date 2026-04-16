@@ -14,6 +14,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { Plus, Fence, Calendar, DollarSign, Trash2 } from 'lucide-react';
 import { format } from 'date-fns';
+import { formatKes } from '@/lib/currency';
 
 const Livestock = () => {
   const { user } = useAuth();
@@ -68,14 +69,14 @@ const Livestock = () => {
   return (
     <AppLayout>
       <div className="animate-fade-in">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <div>
-            <h1 className="text-2xl font-bold text-foreground">Livestock Management</h1>
-            <p className="mt-1 text-muted-foreground">Track your livestock records and finances</p>
+            <h1 className="text-xl sm:text-2xl font-bold text-foreground">Livestock Management</h1>
+            <p className="mt-1 text-sm text-muted-foreground">Track your livestock records and finances</p>
           </div>
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-              <Button><Plus className="mr-2 h-4 w-4" /> Add Livestock</Button>
+              <Button className="self-start sm:self-auto"><Plus className="mr-2 h-4 w-4" /> Add Livestock</Button>
             </DialogTrigger>
             <DialogContent>
               <DialogHeader><DialogTitle>Add Livestock Record</DialogTitle></DialogHeader>
@@ -106,7 +107,7 @@ const Livestock = () => {
                   <Input type="date" value={purchaseDate} onChange={(e) => setPurchaseDate(e.target.value)} required />
                 </div>
                 <div className="space-y-2">
-                  <Label>Purchase Cost</Label>
+                  <Label>Purchase Cost (KES)</Label>
                   <Input type="number" step="0.01" value={purchaseCost} onChange={(e) => setPurchaseCost(e.target.value)} required min="0" />
                 </div>
                 <Button type="submit" className="w-full" disabled={createRecord.isPending}>
@@ -209,36 +210,36 @@ const LivestockCard = ({ record, userId }: { record: any; userId: string }) => {
   return (
     <Card>
       <CardHeader>
-        <div className="flex items-center justify-between">
-          <CardTitle className="text-base capitalize">{record.name || record.animal_type} — {record.quantity} head</CardTitle>
-          <span className={`rounded-full px-2 py-1 text-xs font-medium ${
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+          <CardTitle className="text-base capitalize break-words">{record.name || record.animal_type} — {record.quantity} head</CardTitle>
+          <span className={`self-start rounded-full px-2 py-1 text-xs font-medium ${
             record.status === 'active' ? 'bg-accent text-accent-foreground' : 'bg-muted text-muted-foreground'
           }`}>{record.status}</span>
         </div>
         <p className="text-sm text-muted-foreground">
-          Purchased {format(new Date(record.purchase_date), 'MMM dd, yyyy')} · Cost: {Number(record.purchase_cost).toLocaleString()}
+          Purchased {format(new Date(record.purchase_date), 'MMM dd, yyyy')} · Cost: {formatKes(record.purchase_cost)}
         </p>
       </CardHeader>
       <CardContent>
         {/* Summary */}
-        <div className="grid grid-cols-3 gap-4 mb-4 rounded-lg bg-muted p-4">
-          <div>
+        <div className="grid grid-cols-3 gap-2 sm:gap-4 mb-4 rounded-lg bg-muted p-3 sm:p-4">
+          <div className="min-w-0">
             <p className="text-xs text-muted-foreground">Revenue</p>
-            <p className="text-lg font-bold">{totalSales.toLocaleString()}</p>
+            <p className="text-sm sm:text-lg font-bold break-words">{formatKes(totalSales)}</p>
           </div>
-          <div>
+          <div className="min-w-0">
             <p className="text-xs text-muted-foreground">Expenses</p>
-            <p className="text-lg font-bold">{totalExpenses.toLocaleString()}</p>
+            <p className="text-sm sm:text-lg font-bold break-words">{formatKes(totalExpenses)}</p>
           </div>
-          <div>
+          <div className="min-w-0">
             <p className="text-xs text-muted-foreground">Profit/Loss</p>
-            <p className={`text-lg font-bold ${netProfit >= 0 ? 'text-success' : 'text-destructive'}`}>
-              {netProfit >= 0 ? '+' : ''}{netProfit.toLocaleString()}
+            <p className={`text-sm sm:text-lg font-bold break-words ${netProfit >= 0 ? 'text-success' : 'text-destructive'}`}>
+              {netProfit >= 0 ? '+' : '-'}{formatKes(Math.abs(netProfit))}
             </p>
           </div>
         </div>
 
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           <Dialog open={expOpen} onOpenChange={setExpOpen}>
             <DialogTrigger asChild>
               <Button size="sm" variant="outline"><Plus className="mr-1 h-3 w-3" /> Expense</Button>
@@ -308,21 +309,21 @@ const LivestockCard = ({ record, userId }: { record: any; userId: string }) => {
         {(expenses?.length || sales?.length) ? (
           <div className="mt-4 space-y-2">
             {expenses?.slice(0, 3).map(e => (
-              <div key={e.id} className="flex items-center justify-between rounded border p-2 text-sm">
-                <div>
-                  <span className="font-medium">{Number(e.amount).toLocaleString()}</span>
+              <div key={e.id} className="flex items-center justify-between gap-2 rounded border p-2 text-sm">
+                <div className="min-w-0">
+                  <span className="font-medium text-destructive break-words">-{formatKes(e.amount)}</span>
                   <span className="ml-2 text-muted-foreground capitalize">{e.category}</span>
                 </div>
-                <span className="text-xs text-muted-foreground">{format(new Date(e.expense_date), 'MMM dd')}</span>
+                <span className="text-xs text-muted-foreground shrink-0">{format(new Date(e.expense_date), 'MMM dd')}</span>
               </div>
             ))}
             {sales?.slice(0, 3).map(s => (
-              <div key={s.id} className="flex items-center justify-between rounded border p-2 text-sm">
-                <div>
-                  <span className="font-medium text-success">+{Number(s.amount).toLocaleString()}</span>
+              <div key={s.id} className="flex items-center justify-between gap-2 rounded border p-2 text-sm">
+                <div className="min-w-0">
+                  <span className="font-medium text-success break-words">+{formatKes(s.amount)}</span>
                   <span className="ml-2 text-muted-foreground">{s.quantity_sold} sold</span>
                 </div>
-                <span className="text-xs text-muted-foreground">{format(new Date(s.sale_date), 'MMM dd')}</span>
+                <span className="text-xs text-muted-foreground shrink-0">{format(new Date(s.sale_date), 'MMM dd')}</span>
               </div>
             ))}
           </div>

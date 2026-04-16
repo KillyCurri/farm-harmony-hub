@@ -12,6 +12,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useNavigate } from 'react-router-dom';
 import { Plus, Egg, Calendar, DollarSign } from 'lucide-react';
 import { format } from 'date-fns';
+import { formatKes } from '@/lib/currency';
 
 const Poultry = () => {
   const { user } = useAuth();
@@ -66,14 +67,14 @@ const Poultry = () => {
   return (
     <AppLayout>
       <div className="animate-fade-in">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <div>
-            <h1 className="text-2xl font-bold text-foreground">Poultry Management</h1>
-            <p className="mt-1 text-muted-foreground">Manage your poultry batches</p>
+            <h1 className="text-xl sm:text-2xl font-bold text-foreground">Poultry Management</h1>
+            <p className="mt-1 text-sm text-muted-foreground">Manage your poultry batches</p>
           </div>
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-              <Button>
+              <Button className="self-start sm:self-auto">
                 <Plus className="mr-2 h-4 w-4" />
                 New Batch
               </Button>
@@ -96,8 +97,8 @@ const Poultry = () => {
                   <Input type="number" value={quantity} onChange={(e) => setQuantity(e.target.value)} placeholder="e.g. 500" required min="1" />
                 </div>
                 <div className="space-y-2">
-                  <Label>Purchase Cost</Label>
-                  <Input type="number" step="0.01" value={cost} onChange={(e) => setCost(e.target.value)} placeholder="Total cost" required min="0" />
+                  <Label>Purchase Cost (KES)</Label>
+                  <Input type="number" step="0.01" value={cost} onChange={(e) => setCost(e.target.value)} placeholder="Total cost in KES" required min="0" />
                 </div>
                 <Button type="submit" className="w-full" disabled={createBatch.isPending}>
                   {createBatch.isPending ? 'Creating...' : 'Create Batch'}
@@ -144,8 +145,8 @@ const Poultry = () => {
                       {batch.quantity_bought} birds
                     </div>
                     <div className="flex items-center gap-2 text-muted-foreground">
-                      <DollarSign className="h-4 w-4" />
-                      {Number(batch.purchase_cost).toLocaleString()}
+                      <DollarSign className="h-4 w-4 shrink-0" />
+                      <span className="break-words">{formatKes(batch.purchase_cost)}</span>
                     </div>
                   </div>
                 </CardContent>
