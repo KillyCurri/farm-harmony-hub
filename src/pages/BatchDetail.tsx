@@ -10,6 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
 import { ArrowLeft, Plus, DollarSign, TrendingDown, Skull, Package, Trash2 } from 'lucide-react';
@@ -73,6 +74,28 @@ const BatchDetail = () => {
     enabled: !!id,
   });
 
+  const deleteBatch = useMutation({
+    mutationFn: async () => {
+      // Delete child records first (no FK cascades configured)
+      await Promise.all([
+        supabase.from('batch_food_expenses').delete().eq('batch_id', id!),
+        supabase.from('batch_sales').delete().eq('batch_id', id!),
+        supabase.from('batch_losses').delete().eq('batch_id', id!),
+        supabase.from('batch_other_expenses').delete().eq('batch_id', id!),
+      ]);
+      const { error } = await supabase.from('poultry_batches').delete().eq('id', id!);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['poultry-batches'] });
+      toast({ title: 'Batch deleted' });
+      navigate('/poultry');
+    },
+    onError: (err: any) => {
+      toast({ title: 'Error', description: err.message, variant: 'destructive' });
+    },
+  });
+
   // Calculations
   const totalFoodExpenses = foodExpenses?.reduce((sum, e) => sum + Number(e.amount), 0) ?? 0;
   const totalOtherExpenses = otherExpenses?.reduce((sum, e) => sum + Number(e.amount), 0) ?? 0;
@@ -100,11 +123,38 @@ const BatchDetail = () => {
               Started {format(new Date(batch.purchase_date), 'MMM dd, yyyy')} · {batch.quantity_bought} birds purchased
             </p>
           </div>
-          <span className={`self-start rounded-full px-3 py-1 text-sm font-medium ${
-            batch.status === 'active' ? 'bg-accent text-accent-foreground' : 'bg-muted text-muted-foreground'
-          }`}>
-            {batch.status}
-          </span>
+          <div className="flex items-center gap-2 self-start">
+            <span className={`rounded-full px-3 py-1 text-sm font-medium ${
+              batch.status === 'active' ? 'bg-accent text-accent-foreground' : 'bg-muted text-muted-foreground'
+            }`}>
+              {batch.status}
+            </span>
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button variant="destructive" size="sm">
+                  <Trash2 className="mr-1 h-4 w-4" /> Delete Batch
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Delete this batch?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This will permanently delete "{batch.batch_name}" along with all its food expenses, sales, losses and other expenses. This action cannot be undone.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={() => deleteBatch.mutate()}
+                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                    disabled={deleteBatch.isPending}
+                  >
+                    {deleteBatch.isPending ? 'Deleting...' : 'Delete'}
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </div>
         </div>
 
         {/* Financial Summary */}

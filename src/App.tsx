@@ -10,7 +10,6 @@ import Poultry from "./pages/Poultry";
 import BatchDetail from "./pages/BatchDetail";
 import Livestock from "./pages/Livestock";
 import Profile from "./pages/Profile";
-import Install from "./pages/Install";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -43,7 +42,6 @@ const App = () => (
             <Route path="/poultry/:id" element={<ProtectedRoute><BatchDetail /></ProtectedRoute>} />
             <Route path="/livestock" element={<ProtectedRoute><Livestock /></ProtectedRoute>} />
             <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
-            <Route path="/install" element={<Install />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>
