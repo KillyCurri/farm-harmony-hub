@@ -1,6 +1,6 @@
-import { Egg, Fence, LogOut, LayoutDashboard, Menu, X, User as UserIcon, Download } from 'lucide-react';
+import { Egg, Fence, LogOut, LayoutDashboard, Menu, X, User as UserIcon } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -11,28 +11,10 @@ const AppSidebar = () => {
   const { signOut, profile, user } = useAuth();
   const isMobile = useIsMobile();
   const [open, setOpen] = useState(false);
-  const [isInstalled, setIsInstalled] = useState(false);
 
   useEffect(() => {
     setOpen(false);
   }, [location.pathname]);
-
-  useEffect(() => {
-    const checkInstalled = () => {
-      const standalone =
-        window.matchMedia('(display-mode: standalone)').matches ||
-        (window.navigator as unknown as { standalone?: boolean }).standalone === true;
-      setIsInstalled(standalone);
-    };
-    checkInstalled();
-    const mq = window.matchMedia('(display-mode: standalone)');
-    mq.addEventListener?.('change', checkInstalled);
-    window.addEventListener('appinstalled', checkInstalled);
-    return () => {
-      mq.removeEventListener?.('change', checkInstalled);
-      window.removeEventListener('appinstalled', checkInstalled);
-    };
-  }, []);
 
   const navItems = [
     { label: 'Dashboard', icon: LayoutDashboard, path: '/' },
