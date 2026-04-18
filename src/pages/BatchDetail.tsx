@@ -74,6 +74,28 @@ const BatchDetail = () => {
     enabled: !!id,
   });
 
+  const deleteBatch = useMutation({
+    mutationFn: async () => {
+      // Delete child records first (no FK cascades configured)
+      await Promise.all([
+        supabase.from('batch_food_expenses').delete().eq('batch_id', id!),
+        supabase.from('batch_sales').delete().eq('batch_id', id!),
+        supabase.from('batch_losses').delete().eq('batch_id', id!),
+        supabase.from('batch_other_expenses').delete().eq('batch_id', id!),
+      ]);
+      const { error } = await supabase.from('poultry_batches').delete().eq('id', id!);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['poultry-batches'] });
+      toast({ title: 'Batch deleted' });
+      navigate('/poultry');
+    },
+    onError: (err: any) => {
+      toast({ title: 'Error', description: err.message, variant: 'destructive' });
+    },
+  });
+
   // Calculations
   const totalFoodExpenses = foodExpenses?.reduce((sum, e) => sum + Number(e.amount), 0) ?? 0;
   const totalOtherExpenses = otherExpenses?.reduce((sum, e) => sum + Number(e.amount), 0) ?? 0;
