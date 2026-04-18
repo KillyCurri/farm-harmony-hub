@@ -10,7 +10,6 @@ import Poultry from "./pages/Poultry";
 import BatchDetail from "./pages/BatchDetail";
 import Livestock from "./pages/Livestock";
 import Profile from "./pages/Profile";
-import Install from "./pages/Install";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
