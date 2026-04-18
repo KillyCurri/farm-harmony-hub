@@ -94,15 +94,6 @@ const AppSidebar = () => {
             <p className="truncate text-xs text-sidebar-foreground/60">{user?.email}</p>
           </div>
         </button>
-        {!isInstalled && (
-          <button
-            onClick={() => navigate('/install')}
-            className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground transition-colors"
-          >
-            <Download className="h-5 w-5" />
-            Install app
-          </button>
-        )}
         <button
           onClick={handleSignOut}
           className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground transition-colors"
