@@ -123,11 +123,38 @@ const BatchDetail = () => {
               Started {format(new Date(batch.purchase_date), 'MMM dd, yyyy')} · {batch.quantity_bought} birds purchased
             </p>
           </div>
-          <span className={`self-start rounded-full px-3 py-1 text-sm font-medium ${
-            batch.status === 'active' ? 'bg-accent text-accent-foreground' : 'bg-muted text-muted-foreground'
-          }`}>
-            {batch.status}
-          </span>
+          <div className="flex items-center gap-2 self-start">
+            <span className={`rounded-full px-3 py-1 text-sm font-medium ${
+              batch.status === 'active' ? 'bg-accent text-accent-foreground' : 'bg-muted text-muted-foreground'
+            }`}>
+              {batch.status}
+            </span>
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button variant="destructive" size="sm">
+                  <Trash2 className="mr-1 h-4 w-4" /> Delete Batch
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Delete this batch?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This will permanently delete "{batch.batch_name}" along with all its food expenses, sales, losses and other expenses. This action cannot be undone.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={() => deleteBatch.mutate()}
+                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                    disabled={deleteBatch.isPending}
+                  >
+                    {deleteBatch.isPending ? 'Deleting...' : 'Delete'}
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </div>
         </div>
 
         {/* Financial Summary */}
