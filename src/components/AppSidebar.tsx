@@ -1,4 +1,4 @@
-import { Egg, Fence, LogOut, LayoutDashboard, Menu, X, User as UserIcon } from 'lucide-react';
+import { Egg, Fence, LogOut, LayoutDashboard, Menu, X, User as UserIcon, Download } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
@@ -11,10 +11,28 @@ const AppSidebar = () => {
   const { signOut, profile, user } = useAuth();
   const isMobile = useIsMobile();
   const [open, setOpen] = useState(false);
+  const [isInstalled, setIsInstalled] = useState(false);
 
   useEffect(() => {
     setOpen(false);
   }, [location.pathname]);
+
+  useEffect(() => {
+    const checkInstalled = () => {
+      const standalone =
+        window.matchMedia('(display-mode: standalone)').matches ||
+        (window.navigator as unknown as { standalone?: boolean }).standalone === true;
+      setIsInstalled(standalone);
+    };
+    checkInstalled();
+    const mq = window.matchMedia('(display-mode: standalone)');
+    mq.addEventListener?.('change', checkInstalled);
+    window.addEventListener('appinstalled', checkInstalled);
+    return () => {
+      mq.removeEventListener?.('change', checkInstalled);
+      window.removeEventListener('appinstalled', checkInstalled);
+    };
+  }, []);
 
   const navItems = [
     { label: 'Dashboard', icon: LayoutDashboard, path: '/' },
@@ -94,6 +112,15 @@ const AppSidebar = () => {
             <p className="truncate text-xs text-sidebar-foreground/60">{user?.email}</p>
           </div>
         </button>
+        {!isInstalled && (
+          <button
+            onClick={() => navigate('/install')}
+            className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground transition-colors"
+          >
+            <Download className="h-5 w-5" />
+            Install app
+          </button>
+        )}
         <button
           onClick={handleSignOut}
           className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground transition-colors"
