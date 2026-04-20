@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
-import { Egg, Fence, TrendingUp, ShieldCheck, Phone, Sparkles } from 'lucide-react';
+import { Egg, Fence, TrendingUp, ShieldCheck, Phone, Sparkles, MessageCircle } from 'lucide-react';
 import farmHero from '@/assets/farm-hero.jpg';
 import farmPoultry from '@/assets/farm-poultry.jpg';
 import farmLivestock from '@/assets/farm-livestock.jpg';
@@ -163,13 +163,24 @@ const Auth = () => {
                 <p className="mt-0.5 text-primary-foreground/80">
                   Need help getting started or have a feature in mind? Reach out anytime.
                 </p>
-                <a
-                  href="tel:+254706711531"
-                  className="mt-2 inline-flex items-center gap-2 rounded-lg bg-primary-foreground px-3 py-1.5 text-sm font-semibold text-primary transition-transform hover:scale-[1.02]"
-                >
-                  <Phone className="h-4 w-4" />
-                  0706 711 531
-                </a>
+                <div className="mt-3 flex flex-wrap items-center gap-2">
+                  <a
+                    href="tel:+254706711531"
+                    className="inline-flex items-center gap-2 rounded-lg bg-primary-foreground px-3 py-1.5 text-sm font-semibold text-primary transition-transform hover:scale-[1.02]"
+                  >
+                    <Phone className="h-4 w-4" />
+                    0706 711 531
+                  </a>
+                  <a
+                    href="https://wa.me/254706711531?text=Hi%20Benedict%2C%20I%20need%20help%20with%20OurFarmKenya"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 rounded-lg bg-[#25D366] px-3 py-1.5 text-sm font-semibold text-white transition-transform hover:scale-[1.02]"
+                  >
+                    <MessageCircle className="h-4 w-4" />
+                    WhatsApp
+                  </a>
+                </div>
               </div>
             </div>
           </div>
