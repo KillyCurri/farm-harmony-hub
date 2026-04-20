@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
-import { Egg, Fence, TrendingUp, ShieldCheck, Phone, Sparkles } from 'lucide-react';
+import { Egg, Fence, TrendingUp, ShieldCheck, Phone, Sparkles, MessageCircle } from 'lucide-react';
 import farmHero from '@/assets/farm-hero.jpg';
 import farmPoultry from '@/assets/farm-poultry.jpg';
 import farmLivestock from '@/assets/farm-livestock.jpg';
